@@ -101,7 +101,7 @@ select {
 }
 
 .events .details {
-    margin-bottom: 7px;
+    /*margin-bottom: 7px;*/
 }
 
 .events .details .date, .events .details .service {
@@ -109,6 +109,9 @@ select {
     background-color: #ddd;
     padding: 3px 4px;
     border-radius: 4px;
+    white-space: nowrap;
+    margin-bottom: 7px;
+    display: inline-block;
 }
 
 .events .details .service {

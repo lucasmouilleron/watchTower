@@ -66,6 +66,10 @@ Server
     - Interactive: `cd docker && tools/dockerBuild && tools/dockerRun`
     - Detached: `cd docker && tools/dockerBuild && tools/dockerRunDetached`
 
+Server GUI
+----------
+- `https://hostname.com:443/gui`
+
 Java Client
 -----------
 - `./clientJava`

@@ -102,13 +102,13 @@ function _hello(password) {
         else {
             PASSWORD = password;
             EVENTS_PRESETS = getFromDict(content, "eventsPresets", []);
-            Cookies.set("password", password);
+            Cookies.set("password", password, {expires: 365});
             _events();
         }
         $("#loading").stop().fadeOut();
     });
     p.fail(function (err) {
-        _error("Can't login: {}".format(err));
+        _error("Can't login: {}".format(err.stack));
         $("#loading").stop().fadeOut();
         _login();
     });
@@ -168,7 +168,7 @@ function _events() {
             finally {$("#loading").stop().fadeOut();}
         });
         p.fail(function (err) {
-            _error("Can't load events: {}".format(err));
+            _error("Can't load events: {}".format(err.stack));
             $("#loading").stop().fadeOut();
         });
     });
