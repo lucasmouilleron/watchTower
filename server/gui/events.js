@@ -55,12 +55,12 @@ function intToRGB(i) {
 
 /////////////////////////////////////////////////////////
 function _error(message) {
-    new Noty({"text": message, "timeout": 3000, "type": "error", "theme": "nest", "layout": "bottomCenter"}).show();
+    new Noty({"text": message, "timeout": 3000, "type": "error", "theme": "sunset", "layout": "bottomCenter"}).show();
 }
 
 /////////////////////////////////////////////////////////
 function _success(message) {
-    new Noty({"text": message, "timeout": 1000, "type": "success", "theme": "nest", "layout": "bottomCenter"}).show();
+    new Noty({"text": message, "timeout": 1000, "type": "success", "theme": "sunset", "layout": "bottomCenter"}).show();
 }
 
 /////////////////////////////////////////////////////////
