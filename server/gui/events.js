@@ -15,6 +15,13 @@ String.prototype.format = function () {
 };
 
 /////////////////////////////////////////////////////////
+function capitalizeString(str) {
+    return str.replace(/\w\S*/g, function(txt){
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
+
+/////////////////////////////////////////////////////////
 function nowInSecs() {
     return Math.floor(new Date().getTime() / 1000);
 }
@@ -166,6 +173,7 @@ function _events() {
                     events[i].dateClass = getDateClass(events[i].date);
                     events[i].date = moment.unix(events[i].date).format("YYYY-MM-DD @ HH:mm:ss");
                     events[i].color = intToRGB(hashCode(events[i].service));
+                    events[i].service = capitalizeString(events[i].service);
                 }
                 $("#events-hook").html(renderTemplate("tpl-events", {"events": events, "hasEvents": events.length > 0}));
                 $(".events .details .service").each(function () {
