@@ -69,6 +69,14 @@ function getTimeOffsetInSecsFromString(timeString) {
 }
 
 /////////////////////////////////////////////////////////
+function getDateClass(dateSeconds) {
+    var now = nowInSecs();
+    if (now - dateSeconds < 30 * 60) {return "very-recent";}
+    else if (now - dateSeconds < 2 * 60 * 60) {return "recent";}
+    else {return "old";}
+}
+
+/////////////////////////////////////////////////////////
 function _error(message) {
     new Noty({"text": message, "timeout": 3000, "type": "error", "theme": "sunset", "layout": "bottomCenter"}).show();
 }
@@ -149,12 +157,12 @@ function _events() {
         params["from"] = nowInSecs() - getTimeOffsetInSecsFromString($("#filter-since").val());
         var p = getJSONPromised("{}/events".format(URL_BASE), PASSWORD, params);
         p.done(function (content) {
-            // todo regex colorise?
             try {
                 var resultCode = getFromDict(content, "result", 0);
                 if (resultCode !== 200) {throw "Request error {}".format(resultCode);}
                 var events = getFromDict(content, "events", []);
                 for (var i = 0; i < events.length; i++) {
+                    events[i].dateClass = getDateClass(events[i].date);
                     events[i].date = moment.unix(events[i].date).format("YYYY-MM-DD @ HH:mm:ss");
                     events[i].color = intToRGB(hashCode(events[i].service));
                 }

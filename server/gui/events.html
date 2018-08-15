@@ -8,7 +8,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/png" href="/gui/favicon.png">
+    <link rel="apple-touch-icon" href="/gui/favicon.png">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <link href="/gui/vendors/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
@@ -48,6 +49,7 @@
         <input type="password" placeholder="password" value="{{password}}" id="password" style="width:200px" spellcheck="false"/>
         <input type="submit" value="Login" id="login" style="width:80px"/>
     </form>
+
 </script>
 
 <!-- =============================================== -->
@@ -57,9 +59,9 @@
         {{#events}}
             <div class="event">
                 <div class="details">
-                    <span class="date">{{{date}}}</span> <!--<span class="level">{{{level}}}</span>--> <span class="service">{{{service}}}</span>
+                    <span class="service">{{service}}</span> <!--<span class="level">{{level}}</span>--> <span class="date {{dateClass}}">{{date}}</span>
                 </div>
-                <div class="message">{{{message}}}</div>
+                <div class="message">{{message}}</div>
             </div>
         {{/events}}
     {{/hasEvents}}
@@ -70,6 +72,7 @@
     {{/hasEvents}}
 
     </div>
+
 </script>
 
 <!-- =============================================== -->
@@ -91,6 +94,7 @@
         <input type="text" placeholder="message" value="{{message}}" id="filter-message" style="width:130px" spellcheck="false"/>
         <input type="submit" value="Update" id="update-events" style="width:80px"/>
     </form>
+
 </script>
 
 </body>

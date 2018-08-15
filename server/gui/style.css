@@ -71,7 +71,7 @@ select {
 .content {
     min-height: 100%;
     background-color: #eee;
-    padding: 10px;
+    padding: 10px 5px;
 }
 
 .form {
@@ -94,6 +94,7 @@ select {
     margin: 10px;
     background-color: #fff;
     border-radius: 5px;
+    word-break: break-all;
 }
 
 .events .details > span {
@@ -107,11 +108,23 @@ select {
 .events .details .date, .events .details .service {
     font-size: 0.9em;
     background-color: #ddd;
-    padding: 3px 4px;
+    padding: 3px 6px;
     border-radius: 4px;
     white-space: nowrap;
     margin-bottom: 7px;
     display: inline-block;
+}
+
+.events .details .date {
+    /*font-size: 0.;*/
+}
+
+.events .details .date.very-recent {
+    background-color: #bbb;
+}
+
+.events .details .date.recent {
+    background-color: #ccc;
 }
 
 .events .details .service {
