@@ -1,0 +1,6 @@
+#!/bin/sh
+
+$BASE_FOLDER/scripts/install
+
+cd $HB_FOLDER/server
+python3 server.py

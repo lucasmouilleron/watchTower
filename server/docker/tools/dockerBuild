@@ -1,0 +1,5 @@
+#!/bin/sh
+
+DOCKER_ROOT="$(dirname "$(readlink -f "$0")")"/../
+cd "$DOCKER_ROOT"
+docker build -t="hb:prod" .

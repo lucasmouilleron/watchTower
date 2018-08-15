@@ -1,0 +1,5 @@
+#!/bin/sh
+
+DOCKER_ROOT="$(dirname "$(readlink -f "$0")")"/../
+cd "$DOCKER_ROOT"
+docker run --rm=true -ti -p 4443:4443 -e HB_REV=HEAD --name="hb" hb:prod

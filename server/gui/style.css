@@ -1,0 +1,121 @@
+/**************************************************************************/
+/**************************************************************************/
+body, html {
+    height: 100%;
+    -webkit-user-select: none;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: 14px;
+}
+
+* {
+    /*font-size: 16px;*/
+    /*line-height: 2;*/
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+/**************************************************************************/
+/**************************************************************************/
+input {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 400px;
+    padding: 5px 10px;
+    display: inline-block;
+    margin: 5px 5px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+input:focus, select:focus {
+    border-color: rgba(0, 0, 0, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(0, 0, 0, 0.6);
+    outline: 0 none;
+}
+
+input[type=submit] {
+    background-color: #013a76;
+    color: #fff;
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+input[type=submit]:hover {
+    opacity: 1;
+}
+
+select {
+    font-size: 1em;
+    border: none;
+    height: 31px;
+    border-radius: 5px;
+    -webkit-appearance: none;
+    background-color: #fff;
+    padding: 5px 10px;
+    margin: 5px 5px;
+    color: #aaa;
+}
+
+.noty_theme__nest.noty_bar {
+    border-radius: 5px;
+}
+
+
+/**************************************************************************/
+/**************************************************************************/
+.content {
+    min-height: 100%;
+    background-color: #eee;
+    padding: 10px;
+}
+
+.form {
+    text-align: center;
+}
+
+#loading {
+    display: none;
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    font-size: 50px;
+    color: #cdcdcd;
+    z-index: 99;
+}
+
+.event {
+    display: block;
+    padding: 10px;
+    margin: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+.events .details > span {
+    /*margin:0 3px;*/
+}
+
+.events .details {
+    margin-bottom: 7px;
+}
+
+.events .details .date, .events .details .service {
+    font-size: 0.9em;
+    background-color: #ddd;
+    padding: 3px 4px;
+    border-radius: 4px;
+}
+
+.events .details .service {
+    font-weight: 600;
+    color: #fff;
+}
+
+.events .message {
+    /*padding:5px 6px;*/
+}

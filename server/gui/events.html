@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<!-- =============================================== -->
+<head>
+    <meta name="robots" content="noindex, nofollow">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link href="/gui/vendors/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+    <link href="/gui/vendors/noty.css" rel="stylesheet">
+    <link href="/gui/style.css" rel="stylesheet">
+    <script src="/gui/vendors/jquery.js"></script>
+    <script src="/gui/vendors/mustache.js"></script>
+    <script src="/gui/vendors/bootstrap.js"></script>
+    <script src="/gui/vendors/cookies.js"></script>
+    <script src="/gui/vendors/moment.js"></script>
+    <script src="/gui/vendors/noty.js"></script>
+    <script src="events.js"></script>
+    <title>watchTower</title>
+</head>
+
+
+<body>
+
+<!-- =============================================== -->
+<div id="loading"><i class="fa fa-circle-notch fa-spin"></i></div>
+<div id="content" class="content">
+    <div id="login-hook"></div>
+    <div id="filter-form-hook"></div>
+    <div id="events-hook"></div>
+</div>
+
+<!-- =============================================== -->
+<script>
+    $(document).ready(function () {
+        _main();
+    });
+</script>
+
+<!-- =============================================== -->
+<script id="tpl-login" type="x-tmpl-mustache">
+    <form class="form login-form">
+        <input type="password" placeholder="password" value="{{password}}" id="password" style="width:200px" spellcheck="false"/>
+        <input type="submit" value="Login" id="login" style="width:80px"/>
+    </form>
+</script>
+
+<!-- =============================================== -->
+<script id="tpl-events" type="x-tmpl-mustache">
+    <div class="events">
+    {{#hasEvents}}
+        {{#events}}
+            <div class="event">
+                <div class="details">
+                    <span class="date">{{{date}}}</span> <!--<span class="level">{{{level}}}</span>--> <span class="service">{{{service}}}</span>
+                </div>
+                <div class="message">{{{message}}}</div>
+            </div>
+        {{/events}}
+    {{/hasEvents}}
+    {{^hasEvents}}
+        <div class="event">
+        No events
+       </div>
+    {{/hasEvents}}
+
+    </div>
+</script>
+
+<!-- =============================================== -->
+<script id="tpl-filter" type="x-tmpl-mustache">
+    <form class="form">
+        <select id="filter-preset" style="width:200px">
+            <option>All</option>
+            {{#eventsPresets}}
+                <option>{{name}}</option>
+            {{/eventsPresets}}
+        </select>
+        <input type="text" placeholder="service" value="{{service}}" id="filter-service" style="width:200px" spellcheck="false"/>
+        <input type="text" placeholder="message" value="{{message}}" id="filter-message" style="width:200px" spellcheck="false"/>
+        <input type="submit" value="Update" id="update-events" style="width:80px"/>
+    </form>
+</script>
+
+</body>
+</html>

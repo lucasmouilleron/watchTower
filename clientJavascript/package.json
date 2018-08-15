@@ -1,0 +1,9 @@
+{
+  "name": "heartBeatClient",
+  "version": "0.0.1",
+  "devDependencies": {
+    "https": "^1.0.0",
+    "request": "^2.81.0",
+    "request-promise": "^4.1.1"
+  }
+}

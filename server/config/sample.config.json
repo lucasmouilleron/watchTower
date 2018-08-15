@@ -1,0 +1,17 @@
+{
+  "debug": true,
+  "storeDatas": true,
+  "storeLog": true,
+  "heartbeatLoopSleep": 5,
+  "server": {
+    "ssl": true,
+    "port": 4443,
+    "password": "change me"
+  },
+  "alert": {
+    "activated": true,
+    "defaultType": "pushover",
+    "pushoverAPIKey": "pushover user id"
+  },
+  "eventsPresets": [{"name": "ROC", "service": "tcm", "message": "run.*succ"}, {"name": "TSDC PP", "service": "datacenter.* preprod"}, {"name": "TSDC P", "service": "datacenter.* prod"}]
+}
