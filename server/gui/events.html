@@ -75,11 +75,17 @@
 <!-- =============================================== -->
 <script id="tpl-filter" type="x-tmpl-mustache">
     <form class="form">
-        <select id="filter-preset" style="width:200px">
-            <option>All</option>
+        <select id="filter-preset" style="width:100px">
+            <option>all</option>
             {{#eventsPresets}}
                 <option>{{name}}</option>
             {{/eventsPresets}}
+        </select>
+        <select id="filter-since" style="width:130px">
+            <option>last hour</option>
+            <option selected>last day</option>
+            <option>last 2 days</option>
+            <option>last week</option>
         </select>
         <input type="text" placeholder="service" value="{{service}}" id="filter-service" style="width:200px" spellcheck="false"/>
         <input type="text" placeholder="message" value="{{message}}" id="filter-message" style="width:200px" spellcheck="false"/>

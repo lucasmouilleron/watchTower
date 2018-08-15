@@ -15,6 +15,11 @@ String.prototype.format = function () {
 };
 
 /////////////////////////////////////////////////////////
+function nowInSecs() {
+    return Math.floor(new Date().getTime() / 1000);
+}
+
+/////////////////////////////////////////////////////////
 function getJSONPromised(url, password, params) {
     var dfd = $.Deferred();
     $.ajax({url: url, dataType: "json", data: params, timeout: 7000, headers: {"password": password}}).done(function (data) {
@@ -51,6 +56,16 @@ function hashCode(str) {
 function intToRGB(i) {
     var c = (i & 0x00FFFFFF).toString(16).toUpperCase();
     return "00000".substring(0, 6 - c.length) + c;
+}
+
+/////////////////////////////////////////////////////////
+function getTimeOffsetInSecsFromString(timeString) {
+    timeString = timeString.toLowerCase();
+    if (timeString == "last day") {return 24 * 60 * 60;}
+    if (timeString == "last 2 days") {return 2 * 24 * 60 * 60;}
+    if (timeString == "last week") {return 7 * 24 * 60 * 60;}
+    if (timeString == "last hour") {return 1 * 60 * 60;}
+    else {return 0;}
 }
 
 /////////////////////////////////////////////////////////
@@ -102,20 +117,26 @@ function _hello(password) {
 /////////////////////////////////////////////////////////
 function _events() {
     $("#login-hook").empty();
-    console.log(EVENTS_PRESETS);
+
     $("#filter-form-hook").html(renderTemplate("tpl-filter", {"eventsPresets": EVENTS_PRESETS}));
     $("#filter-preset").change(function () {
+        var preset = {};
         var presetName = $("#filter-preset").val();
         for (var i = 0; i < EVENTS_PRESETS.length; i++) {
             if (EVENTS_PRESETS[i].name === presetName) {
-                var preset = EVENTS_PRESETS[i];
-                $("#filter-service").val(getFromDict(preset, "service", ""));
-                $("#filter-message").val(getFromDict(preset, "message", ""));
-                $("#update-events").click();
+                preset = EVENTS_PRESETS[i];
                 break;
             }
         }
+        $("#filter-service").val(getFromDict(preset, "service", ""));
+        $("#filter-message").val(getFromDict(preset, "message", ""));
+        $("#update-events").click();
     });
+
+    $("#filter-since").change(function () {
+        $("#update-events").click();
+    });
+
     $("#update-events").click(function (e) {
         $("#loading").show();
         e.preventDefault();
@@ -124,6 +145,8 @@ function _events() {
         if (service !== undefined) {params["service"] = service;}
         var message = $("#filter-message").val();
         if (message !== undefined) {params["message"] = message;}
+        params["to"] = nowInSecs();
+        params["from"] = nowInSecs() - getTimeOffsetInSecsFromString($("#filter-since").val());
         var p = getJSONPromised("{}/events".format(URL_BASE), PASSWORD, params);
         p.done(function (content) {
             // todo regex colorise?
