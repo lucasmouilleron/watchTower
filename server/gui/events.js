@@ -171,7 +171,7 @@ function _events() {
                 $(".events .details .service").each(function () {
                     $(this).css({"background-color": "#{}".format(intToRGB(hashCode($(this).html())))});
                 });
-                _success("#{} events loaded".format(events.length));
+                _success("{} events loaded".format(events.length));
             }
             catch (e) {_error("Can't load events: {}".format(e));}
             finally {
