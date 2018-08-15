@@ -147,6 +147,7 @@ function _events() {
 
     $("#update-events").click(function (e) {
         $("#loading").show();
+        $("#update-events").val("...");
         e.preventDefault();
         var params = {};
         var service = $("#filter-service").val();
@@ -170,16 +171,22 @@ function _events() {
                 $(".events .details .service").each(function () {
                     $(this).css({"background-color": "#{}".format(intToRGB(hashCode($(this).html())))});
                 });
-                _success("Events loaded");
+                _success("#{} events loaded".format(events.length));
             }
             catch (e) {_error("Can't load events: {}".format(e));}
-            finally {$("#loading").stop().fadeOut();}
+            finally {
+                $("#loading").stop().fadeOut();
+                $("#update-events").val("Update");
+            }
         });
         p.fail(function (err) {
             _error("Can't load events: {}".format(err.stack));
             $("#loading").stop().fadeOut();
+            $("#update-events").val("Update");
         });
     });
+
+    $("#update-events").click();
 }
 
 /////////////////////////////////////////////////////////
