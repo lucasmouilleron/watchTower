@@ -9,7 +9,7 @@ import alert as a
 import helper as h
 from threading import Thread
 from gevent.wsgi import WSGIServer
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, redirect
 from flask_cors import CORS
 
 ###################################################################################
@@ -44,25 +44,34 @@ class Server(Thread):
         self._addRoute("/heartbeat", self._routeHeartbeatCancel, ["DELETE"])
         self._addRoute("/event", self._routeEventAdd, ["POST"])
         self._addRoute("/events", self._routeEventList, ["GET"])
+        self._addRouteRaw("/", self._routeIndex, ["GET"])
         self._addRouteRaw("/gui", self._routeGUIEventsIndex, ["GET"])
         self._addRouteRaw("/gui/events", self._routeGUIEventsIndex, ["GET"])
         self._addRouteRaw("/gui/<path:path>", self._routeGUI, ["GET"])
 
         # legacy routes
         self._addRoute("/add-event", self._routeEventAdd, ["POST"])
-        self._addRoute("/", self._routeHeartbeatList, ["GET"])
+
         self._addRoute("/get/<service>", self._routeHeartbeatGet, ["GET"])
         self._addRoute("/", self._routeheartbeatPulse, ["POST"])
         self._addRoute("/", self._routeHeartbeatCancel, ["DELETE"])
 
     ###################################################################################
     def run(self):
-        # logging.getLogger('werkzeug').setLevel(logging.ERROR)
-        # if self.ssl is not None: sslContext = (self.certificateCrtFile, self.certificateKeyFile)
-        # else: sslContext = None
-        # self.app.run(host="0.0.0.0", port=self.port, ssl_context=sslContext)
         CORS(self.app)
-        if self.ssl: self.httpServer = WSGIServer(('0.0.0.0', self.port), server.app, log=None, keyfile=self.certificateKeyFile, certfile=self.certificateCrtFile)
+        if self.ssl:
+            # import gevent._ssl3 as ssl3
+            # import ssl
+            # context = ssl3.SSLContext(ssl.PROTOCOL_SSLv23)
+            # context = SSL.Context(ssl.PROTOCOL_TLSv1_2)
+            # context.load_cert_chain(self.certificateCrtFile, self.certificateKeyFile)
+            # context.load_verify_locations(cafile=self.certificateCrtFile)
+            # context.options &= ssl.OP_NO_SSLv3
+            # context.options &= ssl.OP_NO_SSLv2
+            # context.verify_flags = ssl.VERIFY_CRL_CHECK_CHAIN
+            # context.verify_mode = ssl.CERT_NONE
+            # self.httpServer = WSGIServer(('0.0.0.0', self.port), server.app, log=None, ssl_context=context)
+            self.httpServer = WSGIServer(('0.0.0.0', self.port), server.app, log=None, keyfile=self.certificateKeyFile, certfile=self.certificateCrtFile)
         else: self.httpServer = WSGIServer(('0.0.0.0', self.port), server.app, log=None)
         self.httpServer.serve_forever()
 
@@ -93,6 +102,10 @@ class Server(Thread):
     def _addRouteRaw(self, rule, callback, methods, endpoint=None):
         if endpoint is None: endpoint = h.uniqueID()
         self.app.add_url_rule(rule, endpoint, callback, methods=methods)
+
+    ###################################################################################
+    def _routeIndex(self):
+        return redirect("/gui")
 
     ###################################################################################
     def _routeGUI(self, path):
