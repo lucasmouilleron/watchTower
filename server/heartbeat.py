@@ -70,9 +70,8 @@ class Manager(h.InterruptibleThread):
                 alertTitle = "Service %s is pulsing again" % hb.service
                 alertBody = "The service %s is pulsing again" % hb.service
 
-            event = ev.Event(h.now(), 0, "%s - %s" % (alertTitle, alertBody), hb.service)
-            self.eventsPersister.store(event)
-            self.alertsDispatcher.add(event.convertToAlert(hb.alertTarget, hb.alertType))
+            self.eventsPersister.store(ev.Event(h.now(), 0, "%s - %s" % (alertTitle, alertBody), hb.service))
+            self.alertsDispatcher.add(a.Alert(alertTitle, alertBody, hb.alertTarget, hb.alertType))
 
         except Exception as e:
             h.logWarning("Can't alert", hb.service, hb.alertType, hb.alertTarget, h.formatException(e))
