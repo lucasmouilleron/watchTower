@@ -2,6 +2,7 @@
 # IMPORTS
 ###################################################################################
 import helper as h
+import alert as a
 from typing import List
 import os
 from threading import Lock
@@ -19,30 +20,43 @@ lock = Lock()
 
 
 ###################################################################################
-# FUNCTIONS
 ###################################################################################
-
 ###################################################################################
 class Event:
-    def __init__(self, date, level, message, service):
+
+    ###################################################################################
+    def __init__(self, date, level, message, service, alert=False):
         self.date = date
         self.level = level
         self.message = message
         self.service = service
+        self.alert = alert
+
+    ###################################################################################
+    def convertToAlert(self, target, alertType):
+        return a.Alert(self.service, self.message, target, alertType)
 
 
 ###################################################################################
-class EventPersister:
-    def __init__(self, folder, timezone=PERSITER_TIMEZONE):
+###################################################################################
+###################################################################################
+class Persister:
+
+    ###################################################################################
+    def __init__(self, folder, alertsDispatcher: a.Dispatcher, timezone=PERSITER_TIMEZONE):
         self.folder = h.makeDirPath(folder)
         self.timezone = timezone
+        self.alertsDispatcher = alertsDispatcher
 
+    ###################################################################################
     def _getFiles(self, fromDate, toDate, service) -> List[str]:
         return [h.makePath(self.folder, "%s.csv" % day) for day in h.getDaysList(fromDate, toDate, self.timezone)[0]]
 
+    ###################################################################################
     def _getEventFile(self, event: Event):
         return h.makePath(self.folder, "%s.csv" % h.formatTimestamp(event.date, "YYYYMMDD", self.timezone))
 
+    ###################################################################################
     def _filterEvents(self, events: List[Event], fromDate, toDate, level=None, service=None, message=None) -> List[Event]:
         finalEvents = []
         if message is not None: message = re.compile(message, re.I)
@@ -57,6 +71,7 @@ class EventPersister:
             finalEvents.append(e)
         return finalEvents
 
+    ###################################################################################
     def store(self, event: Event):
         try:
             lock.acquire()
@@ -65,6 +80,7 @@ class EventPersister:
         finally:
             lock.release()
 
+    ###################################################################################
     def load(self, fromDate, toDate, level=None, service=None, message=None) -> List[Event]:
         files = self._getFiles(fromDate, toDate, service)
         events = []

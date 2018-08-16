@@ -11,6 +11,7 @@
   "alert": {
     "activated": true,
     "defaultType": "pushover",
+    "defaultTarget": "pushover dest id",
     "pushoverAPIKey": "pushover user id"
   },
   "eventsPresets": [{"name": "ROC", "service": "tcm", "message": "run.*succ"}, {"name": "TSDC PP", "service": "datacenter.* preprod"}, {"name": "TSDC P", "service": "datacenter.* prod"}]

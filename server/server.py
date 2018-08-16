@@ -5,10 +5,11 @@ import signal
 import json
 import heartbeat as hb
 import event as e
+import alert as a
 import helper as h
-from threading import Thread, Event
+from threading import Thread
 from gevent.wsgi import WSGIServer
-from flask import Flask, request, logging, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
 ###################################################################################
@@ -20,7 +21,13 @@ SERVER_TIMEZONE = "Europe/Paris"
 ###################################################################################
 # FUNCTIONS
 ###################################################################################
-class ServerThread(Thread):
+
+###################################################################################
+###################################################################################
+###################################################################################
+class Server(Thread):
+
+    ###################################################################################
     def __init__(self, port, ssl=False, certificateKeyFile=None, certificateCrtFile=None):
         Thread.__init__(self)
         self.app = Flask(__name__)
@@ -30,24 +37,25 @@ class ServerThread(Thread):
         self.certificateCrtFile = certificateCrtFile
         self.httpServer = None
 
-        self.addRoute("/hello", self.routeHello, ["GET"])
-        self.addRoute("/heartbeats", self.routeHeartbeatList, ["GET"])
-        self.addRoute("/heartbeat/<service>", self.routeHeartbeatGet, ["GET"])
-        self.addRoute("/heartbeat", self.routeheartbeatPulse, ["POST"])
-        self.addRoute("/heartbeat", self.routeHeartbeatCancel, ["DELETE"])
-        self.addRoute("/event", self.routeEventAdd, ["POST"])
-        self.addRoute("/events", self.routeEventList, ["GET"])
-        self.addRouteRaw("/gui", self.routeGUIEventsIndex, ["GET"])
-        self.addRouteRaw("/gui/events", self.routeGUIEventsIndex, ["GET"])
-        self.addRouteRaw("/gui/<path:path>", self.routeGUI, ["GET"])
+        self._addRoute("/hello", self._routeHello, ["GET"])
+        self._addRoute("/heartbeats", self._routeHeartbeatList, ["GET"])
+        self._addRoute("/heartbeat/<service>", self._routeHeartbeatGet, ["GET"])
+        self._addRoute("/heartbeat", self._routeheartbeatPulse, ["POST"])
+        self._addRoute("/heartbeat", self._routeHeartbeatCancel, ["DELETE"])
+        self._addRoute("/event", self._routeEventAdd, ["POST"])
+        self._addRoute("/events", self._routeEventList, ["GET"])
+        self._addRouteRaw("/gui", self._routeGUIEventsIndex, ["GET"])
+        self._addRouteRaw("/gui/events", self._routeGUIEventsIndex, ["GET"])
+        self._addRouteRaw("/gui/<path:path>", self._routeGUI, ["GET"])
 
         # legacy routes
-        self.addRoute("/add-event", self.routeEventAdd, ["POST"])
-        self.addRoute("/", self.routeHeartbeatList, ["GET"])
-        self.addRoute("/get/<service>", self.routeHeartbeatGet, ["GET"])
-        self.addRoute("/", self.routeheartbeatPulse, ["POST"])
-        self.addRoute("/", self.routeHeartbeatCancel, ["DELETE"])
+        self._addRoute("/add-event", self._routeEventAdd, ["POST"])
+        self._addRoute("/", self._routeHeartbeatList, ["GET"])
+        self._addRoute("/get/<service>", self._routeHeartbeatGet, ["GET"])
+        self._addRoute("/", self._routeheartbeatPulse, ["POST"])
+        self._addRoute("/", self._routeHeartbeatCancel, ["DELETE"])
 
+    ###################################################################################
     def run(self):
         # logging.getLogger('werkzeug').setLevel(logging.ERROR)
         # if self.ssl is not None: sslContext = (self.certificateCrtFile, self.certificateKeyFile)
@@ -58,10 +66,19 @@ class ServerThread(Thread):
         else: self.httpServer = WSGIServer(('0.0.0.0', self.port), server.app, log=None)
         self.httpServer.serve_forever()
 
+    ###################################################################################
     def stop(self):
         self.httpServer.stop()
 
-    def addRoute(self, rule, callback, methods=["GET"], endpoint=None):
+    ###################################################################################
+    def _testPassword(self, headers):
+        if h.dictionnaryDeepGet(h.CONFIG, "server", "password", default="") != headers.get("password"):
+            h.logDebug("Non authentified request")
+            return False
+        else: return True
+
+    ###################################################################################
+    def _addRoute(self, rule, callback, methods=["GET"], endpoint=None):
         def callbackReal(*args, **kwargs):
             try: return jsonify(callback(*args, **kwargs))
             except Exception as e:
@@ -72,58 +89,70 @@ class ServerThread(Thread):
         if endpoint is None: endpoint = h.uniqueID()
         self.app.add_url_rule(rule, endpoint, callbackReal, methods=methods)
 
-    def addRouteRaw(self, rule, callback, methods, endpoint=None):
+    ###################################################################################
+    def _addRouteRaw(self, rule, callback, methods, endpoint=None):
         if endpoint is None: endpoint = h.uniqueID()
         self.app.add_url_rule(rule, endpoint, callback, methods=methods)
 
-    def routeGUI(self, path):
+    ###################################################################################
+    def _routeGUI(self, path):
         return send_from_directory("gui", path)
 
-    def routeGUIEventsIndex(self):
+    ###################################################################################
+    def _routeGUIEventsIndex(self):
         return send_from_directory("gui", "events.html")
 
-    def routeHello(self):
-        if not hb.heartBeatTestPassword(request.headers): return {"result": 403}
+    ###################################################################################
+    def _routeHello(self):
+        if not self._testPassword(request.headers): return {"result": 403}
         return {"result": 200, "world": h.now(), "eventsPresets": h.dictionnaryDeepGet(h.CONFIG, "eventsPresets", default=[])}
 
-    def routeHeartbeatList(self):
-        if not hb.heartBeatTestPassword(request.headers): return {"result": 403}
-        return {"result": 200, "heartBeats": [v.__dict__ for v in hb.heartBeatList().values()]}
+    ###################################################################################
+    def _routeHeartbeatList(self):
+        if not self._testPassword(request.headers): return {"result": 403}
+        return {"result": 200, "heartBeats": [v.__dict__ for v in heartbeatsManager.heartBeatList().values()]}
 
-    def routeHeartbeatGet(self, service):
-        if not hb.heartBeatTestPassword(request.headers): return {"result": 403}
-        hbs = hb.heartBeatList()
+    ###################################################################################
+    def _routeHeartbeatGet(self, service):
+        if not self._testPassword(request.headers): return {"result": 403}
+        hbs = heartbeatsManager.heartBeatList()
         if service in hbs: return {"result": 200, "heartBeat": hbs[service].__dict__}
         else: return {"result": 500, "hint": "service not found"}
 
-    def routeheartbeatPulse(self):
-        if not hb.heartBeatTestPassword(request.headers): return {"result": 403}
+    ###################################################################################
+    def _routeheartbeatPulse(self):
+        if not self._testPassword(request.headers): return {"result": 403}
         datas = json.loads(request.data.decode("utf-8"))
         if not "service" in datas: return {"result": 500, "hint": "no service provided"}
         if not "nextIn" in datas: return {"result": 500, "hint": "no nextIn provided"}
         if not "alertTarget" in datas: return {"result": 500, "hint": "no alert target provided"}
         if not "alertType" in datas: return {"result": 500, "hint": "no alert type provided"}
-        heartBeatToAdd = hb.heartBeatPulse(datas["service"], datas["alertType"], datas["alertTarget"], int(datas["nextIn"]))
+        heartBeatToAdd = heartbeatsManager.heartBeatPulse(datas["service"], datas["alertType"], datas["alertTarget"], int(datas["nextIn"]))
         return {"result": 200, "action": "pulse", "heartBeat": heartBeatToAdd.__dict__}
 
-    def routeHeartbeatCancel(self):
-        if not hb.heartBeatTestPassword(request.headers): return {"result": 403}
+    ###################################################################################
+    def _routeHeartbeatCancel(self):
+        if not self._testPassword(request.headers): return {"result": 403}
         datas = json.loads(request.data.decode("utf-8"))
         if not "service" in datas: return {"result": 500, "hint": "no service provided"}
-        heartBeatToCancel = hb.heartBeatCancel(datas["service"])
+        heartBeatToCancel = heartbeatsManager.heartBeatCancel(datas["service"])
         if heartBeatToCancel: return {"result": 200, "action": "cancel", "heartBeat": heartBeatToCancel.__dict__}
         else: return {"result": 200, "action": "cancel", "heartBeat": datas["service"]}
 
-    def routeEventAdd(self):
-        if not hb.heartBeatTestPassword(request.headers): return {"result": 403}
+    ###################################################################################
+    def _routeEventAdd(self):
+        if not self._testPassword(request.headers): return {"result": 403}
         datas = json.loads(request.data.decode("utf-8"))
         if not "service" in datas: return {"result": 500, "hint": "no service provided"}
         if not "message" in datas: return {"result": 500, "hint": "no message provided"}
-        eventsPersister.store(e.Event(h.now(), datas.get("level", 0), datas["message"], datas["service"]))
+        event = e.Event(h.now(), datas.get("level", 0), datas["message"], datas["service"])
+        eventsPersister.store(event)
+        if datas.get("alert", False): alertsDispatcher.add(event.convertToAlert(h.dictionnaryDeepGet(h.CONFIG, "alert", "defaultTarget"), h.dictionnaryDeepGet(h.CONFIG, "alert", "defaultType")))
         return {"result": 200}
 
-    def routeEventList(self):
-        if not hb.heartBeatTestPassword(request.headers): return {"result": 403}
+    ###################################################################################
+    def _routeEventList(self):
+        if not self._testPassword(request.headers): return {"result": 403}
         defaultFrom, defaultTo = h.now() - 24 * 60 * 60, h.now()
         humanDates = request.args.get("humanDates", "0") == "1"
         events = eventsPersister.load(h.parseInt(request.args.get("from", default=defaultFrom), defaultFrom), h.parseInt(request.args.get("to", default=defaultTo), defaultTo), request.args.get("level"), request.args.get("service"), request.args.get("message"))
@@ -139,17 +168,22 @@ class ServerThread(Thread):
 ###################################################################################
 h.displaySplash()
 
-eventsPersister = e.EventPersister(h.makePath(h.DATA_FOLDER, "events"))
+alertsDispatcher = a.Dispatcher(h.dictionnaryDeepGet(h.CONFIG, "alert", "activated", default=False))
+alertsDispatcher.start()
+h.logInfo("Alerts dispatcher started")
+
+eventsPersister = e.Persister(h.makePath(h.DATA_FOLDER, "events"), alertsDispatcher)
 h.logInfo("Events persister started")
 
-heartbeatsThread = hb.heartBeatThread()
-heartbeatsThread.start()
-h.logInfo("Heartbeats started")
+heartbeatsManager = hb.Manager(alertsDispatcher, eventsPersister)
+heartbeatsManager.start()
+h.logInfo("Heartbeats manager started")
 
-server = ServerThread(h.dictionnaryDeepGet(h.CONFIG, "server", "port", default=5000), h.dictionnaryDeepGet(h.CONFIG, "server", "ssl", default=False), h.CERTIFICATE_KEY_FILE, h.CERTIFICATE_CRT_FILE)
+server = Server(h.dictionnaryDeepGet(h.CONFIG, "server", "port", default=5000), h.dictionnaryDeepGet(h.CONFIG, "server", "ssl", default=False), h.CERTIFICATE_KEY_FILE, h.CERTIFICATE_CRT_FILE)
 server.start()
 h.logInfo("Server started", server.port, server.ssl)
 
 signal.pause()
 server.stop()
-heartbeatsThread.abort()
+heartbeatsManager.abort()
+alertsDispatcher.abort()
