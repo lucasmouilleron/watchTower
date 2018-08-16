@@ -16,7 +16,7 @@ String.prototype.format = function () {
 
 /////////////////////////////////////////////////////////
 function capitalizeString(str) {
-    return str.replace(/\w\S*/g, function(txt){
+    return str.replace(/\w\S*/g, function (txt) {
         return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
     });
 }
@@ -131,6 +131,7 @@ function _hello(password) {
 
 /////////////////////////////////////////////////////////
 function _events() {
+
     $("#login-hook").empty();
 
     $("#filter-form-hook").html(renderTemplate("tpl-filter", {"eventsPresets": EVENTS_PRESETS}));
@@ -146,6 +147,14 @@ function _events() {
         $("#filter-service").val(getFromDict(preset, "service", ""));
         $("#filter-message").val(getFromDict(preset, "message", ""));
         $("#update-events").click();
+    });
+
+    PullToRefresh.destroyAll();
+    PullToRefresh.init({
+        mainElement: "#content",
+        onRefresh: function () {
+            $("#update-events").click();
+        }
     });
 
     $("#filter-since").change(function () {
