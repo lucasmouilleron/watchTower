@@ -118,7 +118,7 @@ class Server(Thread):
     ###################################################################################
     def _routeHello(self):
         if not self._testPassword(request.headers): return {"result": 403}
-        return {"result": 200, "world": h.now(), "eventsPresets": h.dictionnaryDeepGet(h.CONFIG, "eventsPresets", default=[])}
+        return {"result": 200, "world": h.now(), "eventsPresets": h.dictionnaryDeepGet(h.CONFIG, "eventsPresets", default=[]), "version": h.dictionnaryDeepGet(h.CONFIG, "version", default=0)}
 
     ###################################################################################
     def _routeHeartbeatList(self):

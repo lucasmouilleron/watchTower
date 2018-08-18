@@ -5,6 +5,7 @@
 var URL_BASE = "../../";
 var PASSWORD = undefined;
 var EVENTS_PRESETS = [];
+var SERVER_VERSION = 0;
 
 /////////////////////////////////////////////////////////
 String.prototype.format = function () {
@@ -84,13 +85,17 @@ function getDateClass(dateSeconds) {
 }
 
 /////////////////////////////////////////////////////////
-function _error(message) {
-    new Noty({"text": message, "timeout": 3000, "type": "error", "theme": "sunset", "layout": "bottomCenter"}).show();
+function _error(message, afterCallback) {
+    var callbacks = {};
+    if (afterCallback != undefined) {callbacks["afterClose"] = afterCallback;}
+    new Noty({"text": message, "timeout": 3000, "type": "error", "theme": "sunset", "layout": "bottomCenter", "callbacks": callbacks}).show();
 }
 
 /////////////////////////////////////////////////////////
-function _success(message) {
-    new Noty({"text": message, "timeout": 1000, "type": "success", "theme": "sunset", "layout": "bottomCenter"}).show();
+function _success(message, afterCallback) {
+    var callbacks = {};
+    if (afterCallback != undefined) {callbacks["afterClose"] = afterCallback;}
+    new Noty({"text": message, "timeout": 1000, "type": "success", "theme": "sunset", "layout": "bottomCenter", "callbacks": callbacks}).show();
 }
 
 /////////////////////////////////////////////////////////
@@ -116,8 +121,22 @@ function _hello(password) {
         }
         else {
             PASSWORD = password;
-            EVENTS_PRESETS = getFromDict(content, "eventsPresets", []);
             Cookies.set("password", password, {expires: 365});
+            SERVER_VERSION = getFromDict(content, "version", 0);
+            var clientVersion = Cookies.get("version");
+            if (clientVersion === undefined) {clientVersion = SERVER_VERSION;}
+            console.log(clientVersion, SERVER_VERSION);
+            if (clientVersion != SERVER_VERSION) {
+                Cookies.remove("version");
+                _error("New version available, reloading...", function () {
+                    location.reload();
+                });
+            }
+            else {
+                Cookies.set("version", SERVER_VERSION, {expires: 365});
+                console.log("setting version")
+            }
+            EVENTS_PRESETS = getFromDict(content, "eventsPresets", []);
             _events();
         }
         $("#loading").stop().fadeOut();
