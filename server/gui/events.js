@@ -149,6 +149,7 @@ function _events() {
         $("#update-events").click();
     });
 
+    $(".event .message").readmore("destroy");
     PullToRefresh.destroyAll();
     PullToRefresh.init({
         mainElement: "#content",
@@ -188,6 +189,7 @@ function _events() {
                 $(".events .details .service").each(function () {
                     $(this).css({"background-color": "#{}".format(intToRGB(hashCode($(this).html())))});
                 });
+                $(".event .message").readmore();
                 _success("{} events loaded".format(events.length));
             }
             catch (e) {_error("Can't load events: {}".format(e));}

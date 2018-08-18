@@ -112,6 +112,22 @@ select {
     /*margin-bottom: 7px;*/
 }
 
+.event .message {
+    overflow: hidden;
+}
+
+.event > a {
+    border-radius: 5px;
+    /*background-color:#333333;*/
+    color:#ccc;
+    text-decoration: none;
+    font-size: 0.9em;
+    /*padding: 3px 6px;*/
+    display:block;
+    text-align: center;
+    margin-top:5px;
+}
+
 .events .details .date, .events .details .service {
     font-size: 0.9em;
     background-color: #ddd;
