@@ -125,7 +125,6 @@ function _hello(password) {
             SERVER_VERSION = getFromDict(content, "version", 0);
             var clientVersion = Cookies.get("version");
             if (clientVersion === undefined) {clientVersion = SERVER_VERSION;}
-            console.log(clientVersion, SERVER_VERSION);
             if (clientVersion != SERVER_VERSION) {
                 Cookies.remove("version");
                 _error("New version available, reloading...", function () {
@@ -134,7 +133,6 @@ function _hello(password) {
             }
             else {
                 Cookies.set("version", SERVER_VERSION, {expires: 365});
-                console.log("setting version")
             }
             EVENTS_PRESETS = getFromDict(content, "eventsPresets", []);
             _events();
