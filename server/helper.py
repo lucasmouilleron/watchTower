@@ -20,6 +20,7 @@ CONFIG_FOLDER = ROOT_FOLDER + "/config"
 CONFIG_FILE = CONFIG_FOLDER + "/config.json"
 CERTIFICATE_KEY_FILE = CONFIG_FOLDER + "/server.key"
 CERTIFICATE_CRT_FILE = CONFIG_FOLDER + "/server.crt"
+FULLCHAIN_CRT_FILE = CONFIG_FOLDER + "/fullchain.crt"
 LOG_FORMAT = "%(asctime)-15s - %(levelname)-7s - %(message)s"
 LOG_LOGGER = "main"
 LOG_FOLDER = ROOT_FOLDER + "/log"
@@ -40,6 +41,13 @@ if CONFIG.get("storeLog", False):
     fileHandler.setFormatter(logging.Formatter(LOG_FORMAT))
     logging.getLogger(LOG_LOGGER).addHandler(fileHandler)
 if not os.path.exists(DATA_FOLDER): os.mkdir(DATA_FOLDER)
+
+################################################################################
+def readFromFile(filePath):
+    f = open(filePath, 'r')
+    text = f.read()
+    f.close()
+    return text
 
 
 ###################################################################################

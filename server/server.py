@@ -28,13 +28,14 @@ SERVER_TIMEZONE = "Europe/Paris"
 class Server(Thread):
 
     ###################################################################################
-    def __init__(self, port, ssl=False, certificateKeyFile=None, certificateCrtFile=None):
+    def __init__(self, port, ssl=False, certificateKeyFile=None, certificateCrtFile=None, fullchainCrtFile=""):
         Thread.__init__(self)
         self.app = Flask(__name__)
         self.port = port
         self.ssl = ssl
         self.certificateKeyFile = certificateKeyFile
         self.certificateCrtFile = certificateCrtFile
+        self.fullchainCrtFile = fullchainCrtFile
         self.httpServer = None
 
         self._addRoute("/hello", self._routeHello, ["GET"])
@@ -59,20 +60,8 @@ class Server(Thread):
     ###################################################################################
     def run(self):
         CORS(self.app)
-        if self.ssl:
-            # import gevent._ssl3 as ssl3
-            # import ssl
-            # context = ssl3.SSLContext(ssl.PROTOCOL_SSLv23)
-            # context = SSL.Context(ssl.PROTOCOL_TLSv1_2)
-            # context.load_cert_chain(self.certificateCrtFile, self.certificateKeyFile)
-            # context.load_verify_locations(cafile=self.certificateCrtFile)
-            # context.options &= ssl.OP_NO_SSLv3
-            # context.options &= ssl.OP_NO_SSLv2
-            # context.verify_flags = ssl.VERIFY_CRL_CHECK_CHAIN
-            # context.verify_mode = ssl.CERT_NONE
-            # self.httpServer = WSGIServer(('0.0.0.0', self.port), server.app, log=None, ssl_context=context)
-            self.httpServer = WSGIServer(('0.0.0.0', self.port), server.app, log=None, keyfile=self.certificateKeyFile, certfile=self.certificateCrtFile)
-        else: self.httpServer = WSGIServer(('0.0.0.0', self.port), server.app, log=None)
+        if self.ssl: self.httpServer = WSGIServer(("0.0.0.0", self.port), server.app, log=None, keyfile=self.certificateKeyFile, certfile=self.certificateCrtFile, ca_certs=self.fullchainCrtFile)
+        else: self.httpServer = WSGIServer(("0.0.0.0", self.port), server.app, log=None)
         self.httpServer.serve_forever()
 
     ###################################################################################
@@ -192,7 +181,7 @@ heartbeatsManager = hb.Manager(alertsDispatcher, eventsPersister)
 heartbeatsManager.start()
 h.logInfo("Heartbeats manager started")
 
-server = Server(h.dictionnaryDeepGet(h.CONFIG, "server", "port", default=5000), h.dictionnaryDeepGet(h.CONFIG, "server", "ssl", default=False), h.CERTIFICATE_KEY_FILE, h.CERTIFICATE_CRT_FILE)
+server = Server(h.dictionnaryDeepGet(h.CONFIG, "server", "port", default=5000), h.dictionnaryDeepGet(h.CONFIG, "server", "ssl", default=False), h.CERTIFICATE_KEY_FILE, h.CERTIFICATE_CRT_FILE, h.FULLCHAIN_CRT_FILE)
 server.start()
 h.logInfo("Server started", server.port, server.ssl)
 
