@@ -18,7 +18,8 @@ String.prototype.format = function () {
 /////////////////////////////////////////////////////////
 function capitalizeString(str) {
     return str.replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        // return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        return txt.charAt(0).toUpperCase() + txt.substr(1);
     });
 }
 
@@ -199,12 +200,12 @@ function _events() {
                 for (var i = 0; i < events.length; i++) {
                     events[i].dateClass = getDateClass(events[i].date);
                     events[i].date = moment.unix(events[i].date).format("YYYY-MM-DD @ HH:mm:ss");
-                    events[i].color = intToRGB(hashCode(events[i].service));
+                    events[i].color = intToRGB(hashCode(events[i].service.toUpperCase()));
                     events[i].service = capitalizeString(events[i].service);
                 }
                 $("#events-hook").html(renderTemplate("tpl-events", {"events": events, "hasEvents": events.length > 0}));
-                $(".events .details .service").each(function () {
-                    $(this).css({"background-color": "#{}".format(intToRGB(hashCode($(this).html())))});
+                $(".events .event").each(function () {
+                    $(this).find(".service").css({"background-color": "#{}".format($(this).data("color"))});
                 });
                 $(".event .message").readmore();
                 _success("{} events loaded".format(events.length));
