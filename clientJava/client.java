@@ -78,8 +78,7 @@ public class client
             connection.addRequestProperty("content-type", "application/json");
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
-
-            writeDatas(String.format("{\"service\":\"%s\",\"message\":\"%s\",\"level\":\"%s\"}", service, message, level), connection);
+            writeDatas(String.format("{\"service\":\"%s\",\"message\":\"%s\",\"level\":\"%s\"}", service, cleanupField(message), level), connection);
             return readAllContent(connection);
         }
         catch(Exception e)
@@ -152,6 +151,12 @@ public class client
             content = line + "\n";
         }
         return content;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////
+    private String cleanupField(String field)
+    {
+        return field.replaceAll("\"", "\\\\\"").replaceAll("\n", "\\\\n");
     }
 }
 

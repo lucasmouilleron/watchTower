@@ -11,7 +11,7 @@ ALERT_TARGET = "pushoverTargetID"
 client = hbClient.client(URL, PORT, PASSWORD)
 client.pulse("testPython", ALERT_TYPE, ALERT_TARGET, 60)
 client.cancel("testPython")
-client.list()
+client.heartbeats()
 
-client.sendEvent("test4", "my message", 4, inThread=False)
-client.listEvent()
+client.add("test4", "my m\"es\nsage", 4, inThread=False)
+client.events()
