@@ -6,6 +6,7 @@ import json
 import heartbeat as hb
 import event as e
 import alert as a
+import ping as p
 import helper as h
 from threading import Thread
 from gevent.wsgi import WSGIServer
@@ -177,6 +178,10 @@ h.logInfo("Alerts dispatcher started")
 eventsPersister = e.Persister(h.makePath(h.DATA_FOLDER, "events"), alertsDispatcher)
 h.logInfo("Events persister started")
 
+pinger = p.Pinger()
+pinger.start()
+h.logInfo("Pinger started")
+
 heartbeatsManager = hb.Manager(alertsDispatcher, eventsPersister)
 heartbeatsManager.start()
 h.logInfo("Heartbeats manager started")
@@ -189,3 +194,4 @@ signal.pause()
 server.stop()
 heartbeatsManager.abort()
 alertsDispatcher.abort()
+pinger.abort()
