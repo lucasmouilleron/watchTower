@@ -14,5 +14,8 @@
     "defaultTarget": "pushover dest id",
     "pushoverAPIKey": "pushover user id"
   },
-  "eventsPresets": [{"name": "ROC", "service": "tcm", "message": "run.*succ"}, {"name": "TSDC PP", "service": "datacenter.* preprod"}, {"name": "TSDC P", "service": "datacenter.* prod"}]
+  "eventsPresets": [{"name": "ROC", "service": "tcm", "message": "run.*succ"}, {"name": "TSDC PP", "service": "datacenter.* preprod"}, {"name": "TSDC P", "service": "datacenter.* prod"}],
+  "pings": [
+    {"service": "google", "url": "https://google.com", "frequency": 30, "alertType": "pushover", "alertTarget": "todo"}
+  ]
 }

@@ -12,6 +12,9 @@ import dateutil
 import arrow
 import csv
 import uuid
+import requests
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+import traceback
 
 ###################################################################################
 ROOT_FOLDER = os.path.dirname(os.path.realpath(__file__))
@@ -41,6 +44,8 @@ if CONFIG.get("storeLog", False):
     fileHandler.setFormatter(logging.Formatter(LOG_FORMAT))
     logging.getLogger(LOG_LOGGER).addHandler(fileHandler)
 if not os.path.exists(DATA_FOLDER): os.mkdir(DATA_FOLDER)
+################################################################################
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 ################################################################################
 def readFromFile(filePath):
@@ -264,3 +269,7 @@ def parseInt(intString, defaultValue):
         return int(intString)
     except ValueError:
         return defaultValue
+
+################################################################################
+def getLastExceptionAndTrace():
+    return traceback.format_exc(), traceback.format_stack()

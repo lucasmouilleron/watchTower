@@ -178,7 +178,10 @@ h.logInfo("Alerts dispatcher started")
 eventsPersister = e.Persister(h.makePath(h.DATA_FOLDER, "events"), alertsDispatcher)
 h.logInfo("Events persister started")
 
-pinger = p.Pinger()
+pinger = p.Pinger(alertsDispatcher, eventsPersister)
+for pr in h.CONFIG.get("pings", []):
+    if not "service" in pr or not "url" in pr or not "alertType" in pr or not "alertTarget" in pr: continue
+    pinger.add(p.Ping(pr["service"], pr["url"], pr.get("frequency", 30), pr["alertType"], pr["alertTarget"]))
 pinger.start()
 h.logInfo("Pinger started")
 
