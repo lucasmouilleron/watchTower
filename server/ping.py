@@ -7,6 +7,7 @@ import event as e
 from typing import List
 import time
 import requests
+from threading import Thread
 
 
 ###################################################################################
@@ -46,6 +47,7 @@ class Pinger(h.InterruptibleThread):
         self.dispatcher = dispatcher
         self.eventsPersister = eventsPersister
         self.pings = []  # type: List[Ping]
+        self.threads = []
 
     ###################################################################################
     def run(self):
@@ -55,14 +57,16 @@ class Pinger(h.InterruptibleThread):
                     if p.lastPing + p.frequency < h.now():
                         h.logDebug("Trigger ping", p.service)
                         p.lastPing = h.now()
-                        self.ping(p)
+                        t = Thread(target=self.ping, args=[p])
+                        t.start()
+                        self.threads.append(t)
                 time.sleep(5)
+                self.threads = [t for t in self.threads if t.isAlive()]
             except: print(h.getLastExceptionAndTrace())
         h.logWarning("Pinger worker exit")
 
     ###################################################################################
     def ping(self, p: Ping):
-        # todo in thread
         try:
             p.lastPing = h.now()
             r = requests.request(p.method, p.url, headers={}, verify=False, timeout=p.timeout)
