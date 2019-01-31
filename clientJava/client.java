@@ -156,7 +156,7 @@ public class client
     /////////////////////////////////////////////////////////////////////////////////////////
     private String cleanupField(String field)
     {
-        return field.replaceAll("\"", "\\\\\"").replaceAll("\n", "\\\\n");
+        return field.replaceAll("\"", "\\\\\"").replaceAll("\\p{C}", " ").replaceAll("\\s{2,}", " ").trim();
     }
 }
 
