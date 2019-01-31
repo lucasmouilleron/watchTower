@@ -61,8 +61,8 @@ class Server(Thread):
     ###################################################################################
     def run(self):
         CORS(self.app)
-        if self.ssl: self.httpServer = WSGIServer(("0.0.0.0", self.port), server.app, log=None, keyfile=self.certificateKeyFile, certfile=self.certificateCrtFile, ca_certs=self.fullchainCrtFile)
-        else: self.httpServer = WSGIServer(("0.0.0.0", self.port), server.app, log=None)
+        if self.ssl: self.httpServer = WSGIServer(("0.0.0.0", self.port), self.app, log=None, keyfile=self.certificateKeyFile, certfile=self.certificateCrtFile, ca_certs=self.fullchainCrtFile)
+        else: self.httpServer = WSGIServer(("0.0.0.0", self.port), self.app, log=None)
         self.httpServer.serve_forever()
 
     ###################################################################################
