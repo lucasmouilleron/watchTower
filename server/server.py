@@ -181,7 +181,7 @@ h.logInfo("Events persister started")
 pinger = p.Pinger(alertsDispatcher, eventsPersister)
 for pr in h.CONFIG.get("pings", []):
     if not "service" in pr or not "url" in pr or not "alertType" in pr or not "alertTarget" in pr: continue
-    pinger.add(p.Ping(pr["service"], pr["url"], pr.get("frequency", 30), pr["alertType"], pr["alertTarget"]))
+    pinger.add(p.Ping(pr["service"], pr["url"], pr.get("frequency", 30), pr["alertType"], pr["alertTarget"], proxyURL=pr.get("proxyURL", None)))
 pinger.start()
 h.logInfo("Pinger started")
 

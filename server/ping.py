@@ -14,7 +14,7 @@ from threading import Thread
 ###################################################################################
 ###################################################################################
 class Ping:
-    def __init__(self, service, url, frequency, alertType, alertTarget, method="get", login=None, password=None, timeout=3, expectedCode=200):
+    def __init__(self, service, url, frequency, alertType, alertTarget, method="get", login=None, password=None, timeout=3, expectedCode=200, proxyURL=None):
         self.service = service
         self.url = url
         self.frequency = frequency
@@ -25,6 +25,7 @@ class Ping:
         self.password = password
         self.timeout = timeout
         self.expectedCode = expectedCode
+        self.proxyURL = proxyURL
 
         if self.timeout > self.frequency:
             self.timeout = self.frequency / 2
@@ -69,7 +70,9 @@ class Pinger(h.InterruptibleThread):
     def ping(self, p: Ping):
         try:
             p.lastPing = h.now()
-            r = requests.request(p.method, p.url, headers={}, verify=False, timeout=p.timeout)
+            proxies = {}
+            if p.proxyURL is not None: proxies["http"], proxies["http"] = p.proxyURL, p.proxyURL
+            r = requests.request(p.method, p.url, headers={}, verify=False, timeout=p.timeout, proxies=proxies)
             result = p.expectedCode == r.status_code
         except:
             result = False
