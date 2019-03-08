@@ -14,7 +14,7 @@ from threading import Thread
 ###################################################################################
 ###################################################################################
 class Ping:
-    def __init__(self, service, url, frequency, alertType, alertTarget, method="get", login=None, password=None, timeout=3, expectedCode=200, proxyURL=None):
+    def __init__(self, service, url, frequency, alertType, alertTarget, method="get", login=None, password=None, timeout=10, expectedCode=200, proxyURL=None):
         self.service = service
         self.url = url
         self.frequency = frequency
