@@ -9,7 +9,7 @@ import alert as a
 import ping as p
 import helper as h
 from threading import Thread
-from gevent.wsgi import WSGIServer
+from gevent.pywsgi import WSGIServer
 from flask import Flask, request, jsonify, send_from_directory, redirect
 from flask_cors import CORS
 
