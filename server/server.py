@@ -46,6 +46,7 @@ class Server(Thread):
         self._addRoute("/heartbeat", self._routeHeartbeatCancel, ["DELETE"])
         self._addRoute("/event", self._routeEventAdd, ["POST"])
         self._addRoute("/events", self._routeEventList, ["GET"])
+        self._addRoute("/pings", self._routePingList, ["GET"])
         self._addRouteRaw("/", self._routeIndex, ["GET"])
         self._addRouteRaw("/gui", self._routeGUIEventsIndex, ["GET"])
         self._addRouteRaw("/gui/events", self._routeGUIEventsIndex, ["GET"])
@@ -113,7 +114,14 @@ class Server(Thread):
     ###################################################################################
     def _routeHeartbeatList(self):
         if not self._testPassword(request.headers): return {"result": 403}
-        return {"result": 200, "heartBeats": [v.__dict__ for v in heartbeatsManager.heartBeatList().values()]}
+        humanDates = request.args.get("humanDates", "0") == "1"
+        finalHeartbeats = []
+        for v in heartbeatsManager.heartBeatList().values():
+            vf = v.__dict__
+            if humanDates: vf["expected"] = h.formatTimestamp(vf["expected"], "YYYY-MM-DD HH:mm:ss", SERVER_TIMEZONE)
+            if humanDates: vf["last"] = h.formatTimestamp(vf["last"], "YYYY-MM-DD HH:mm:ss", SERVER_TIMEZONE)
+            finalHeartbeats.append(vf)
+        return {"result": 200, "heartBeats": finalHeartbeats}
 
     ###################################################################################
     def _routeHeartbeatGet(self, service):
@@ -152,6 +160,18 @@ class Server(Thread):
         eventsPersister.store(event)
         if datas.get("alert", False): alertsDispatcher.add(event.convertToAlert(h.dictionnaryDeepGet(h.CONFIG, "alert", "defaultTarget"), h.dictionnaryDeepGet(h.CONFIG, "alert", "defaultType")))
         return {"result": 200}
+
+    ###################################################################################
+    def _routePingList(self):
+        if not self._testPassword(request.headers): return {"result": 403}
+        humanDates = request.args.get("humanDates", "0") == "1"
+        finalPings = []
+        for p in pinger.getPings():
+            pf = p.__dict__
+            if humanDates: pf["lastPing"] = h.formatTimestamp(pf["lastPing"], "YYYY-MM-DD HH:mm:ss", SERVER_TIMEZONE)
+            if humanDates: pf["lastPingSuccess"] = h.formatTimestamp(pf["lastPingSuccess"], "YYYY-MM-DD HH:mm:ss", SERVER_TIMEZONE)
+            finalPings.append(pf)
+        return {"result": 200, "pings": finalPings}
 
     ###################################################################################
     def _routeEventList(self):

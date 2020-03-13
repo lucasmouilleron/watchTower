@@ -8,7 +8,7 @@ from typing import List
 import time
 import requests
 from threading import Thread
-
+import copy
 
 ###################################################################################
 ###################################################################################
@@ -92,3 +92,7 @@ class Pinger(h.InterruptibleThread):
     def add(self, p: Ping):
         self.pings.append(p)
         h.logDebug("Ping added", p.__dict__)
+
+    ###################################################################################
+    def getPings(self):
+        return [copy.copy(p) for p in self.pings]
