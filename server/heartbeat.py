@@ -100,7 +100,7 @@ class Manager(h.InterruptibleThread):
     ###################################################################################
     def heartBeatList(self):
         lock.acquire()
-        hbsCopy = copy.copy(heartBeats)
+        hbsCopy = {k: copy.copy(heartBeats[k]) for k in heartBeats}
         lock.release()
         return hbsCopy
 
