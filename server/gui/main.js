@@ -1,4 +1,10 @@
 /////////////////////////////////////////////////////////
+var URL_BASE = "../../";
+var PASSWORD = undefined;
+var EVENTS_PRESETS = undefined;
+var SERVER_VERSION = 0;
+
+/////////////////////////////////////////////////////////
 function _login() {
     $("#filter-form-hook").empty();
     $("#main-hook").empty();
@@ -32,10 +38,9 @@ function _hello(password) {
             } else {
                 Cookies.set("version", SERVER_VERSION, {expires: 365});
             }
-            // var eventsPresets = getFromDict(content, "eventsPresets", []);
-            // events(eventsPresets);
-            // TODO UNCOMMENT
-            heartbeats();
+            $("#login-hook").empty();
+            EVENTS_PRESETS = getFromDict(content, "eventsPresets", []);
+            setupMenu();
         }
         $("#loading").stop().fadeOut();
     });
@@ -44,6 +49,30 @@ function _hello(password) {
         $("#loading").stop().fadeOut();
         _login();
     });
+}
+
+/////////////////////////////////////////////////////////
+function setupMenu() {
+
+    setInterval(function () {
+        $(".menu .now").html(moment.unix(nowInSecs()).format("YYYY-MM-DD @ HH:mm:ss"));
+    }, 1000);
+
+
+    $(".menu .events").click(function (e) {
+        e.preventDefault();
+        $(".menu .item").removeClass("current");
+        $(this).addClass("current");
+        events(EVENTS_PRESETS);
+
+    });
+    $(".menu .heartbeats").click(function (e) {
+        e.preventDefault();
+        $(".menu .item").removeClass("current");
+        $(this).addClass("current");
+        heartbeats();
+    });
+    $(".menu .events").click();
 }
 
 /////////////////////////////////////////////////////////

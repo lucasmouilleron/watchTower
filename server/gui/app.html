@@ -35,10 +35,19 @@
 
 <!-- =============================================== -->
 <div id="loading"><i class="fa fa-circle-notch fa-spin"></i></div>
+
 <div id="content" class="content">
-    <div id="login-hook"></div>
-    <div id="filter-form-hook"></div>
-    <div id="main-hook"></div>
+    <div class="menu">
+        <div class="items">
+            <div class="item events">Events</div>
+            <div class="item heartbeats">Heartbeats</div>
+            <div class="item now">-</div>
+        </div>
+    </div>
+    <div class="body">
+        <div id="login-hook"></div>
+        <div id="main-hook"></div>
+    </div>
 </div>
 
 <!-- =============================================== -->
@@ -59,6 +68,9 @@
         <input type="submit" value="Login" id="login" style="width:80px"/>
     </form>
 
+
+
+
 </script>
 
 <!-- =============================================== -->
@@ -67,6 +79,16 @@
 
 <!-- =============================================== -->
 <script id="tpl-events" type="x-tmpl-mustache">
+    <div id="events-filter-form-hook"></div>
+    <div id="events-list-hook"></div>
+
+
+
+</script>
+
+<!-- =============================================== -->
+<script id="tpl-events-list" type="x-tmpl-mustache">
+
     <div class="events">
     {{#hasEvents}}
         {{#events}}
@@ -86,10 +108,13 @@
 
     </div>
 
+
+
+
 </script>
 
 <!-- =============================================== -->
-<script id="tpl-filter" type="x-tmpl-mustache">
+<script id="tpl-events-filter" type="x-tmpl-mustache">
     <form class="form">
         <select id="filter-preset" style="width:100px">
             <option>all</option>
@@ -108,6 +133,9 @@
         <input type="submit" value="Update" id="update-events" style="width:80px"/>
     </form>
 
+
+
+
 </script>
 
 <!-- =============================================== -->
@@ -115,6 +143,20 @@
 <!-- =============================================== -->
 
 <!-- =============================================== -->
+<script id="tpl-heartbeats" type="x-tmpl-mustache">
+    <div class="heartbeats">
+        {{#items}}
+            <div class="heartbeat item" data-color="{{color}}">
+                <div class="details"><span class="service">{{service}}</span> <span class="date {{dateClass}}">{{lastDate}}</span></div>
+                <div><span class="params">{{type}}</span><span class="params">{{params}}</span></div>
+            </div>
+        {{/items}}
+    </div>
+
+
+
+
+</script>
 
 </body>
 </html>

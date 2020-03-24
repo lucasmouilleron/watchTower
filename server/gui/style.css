@@ -81,6 +81,10 @@ select {
     padding: 10px 10px;
 }
 
+.body {
+    margin-top:40px;
+}
+
 .form {
     text-align: center;
 }
@@ -95,6 +99,39 @@ select {
     z-index: 99;
 }
 
+/**************************************************************************/
+/**************************************************************************/
+.menu {
+    position:fixed;
+    top:10px;
+    left:10px;
+    width:100%;
+}
+
+.menu .items {
+    text-align: left;
+}
+
+.menu .item {
+    cursor: pointer;
+    display: inline-block;
+    background-color: #000;
+    color:#fff;
+    border-radius: 5px;
+    padding: 3px 6px;
+    opacity: 0.8;
+}
+
+.menu .item:hover {
+    opacity: 1;
+}
+
+.menu .item.current {
+    background-color: #777;
+}
+
+/**************************************************************************/
+/**************************************************************************/
 .event {
     display: block;
     padding: 10px;
@@ -104,8 +141,12 @@ select {
     word-break: break-all;
 }
 
+#events-filter-form-hook .form{
+    text-align: left;
+}
+
 .events .details > span {
-    margin:0 3px;
+    margin: 0 3px;
 }
 
 .events .details {
@@ -119,13 +160,13 @@ select {
 .event > a {
     border-radius: 5px;
     /*background-color:#333333;*/
-    color:#ccc;
+    color: #ccc;
     text-decoration: none;
     font-size: 0.9em;
     /*padding: 3px 6px;*/
-    display:block;
+    display: block;
     text-align: center;
-    margin-top:5px;
+    margin-top: 5px;
 }
 
 .events .details .date, .events .details .service {
@@ -158,3 +199,50 @@ select {
 .events .message {
     /*padding:5px 6px;*/
 }
+
+/**************************************************************************/
+/**************************************************************************/
+.heartbeats .item {
+    display: block;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #fff;
+    border-radius: 5px;
+    word-break: break-all;
+}
+
+.heartbeats .details .date, .heartbeats .details .service {
+    background-color: #ddd;
+    padding: 3px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
+    margin-bottom: 7px;
+    display: inline-block;
+}
+
+.heartbeats .details .date {
+    color: #fff;
+}
+
+.heartbeats .details .date.on-time {
+    background-color: #28a745;
+}
+
+.heartbeats .details .date.late {
+    background-color: #dc3545;
+}
+
+.heartbeats .details .service {
+    font-weight: 600;
+    color: #fff;
+}
+
+.heartbeats .params {
+    font-size: 0.9em;
+    background-color: #ddd;
+    border-radius: 4px;
+    padding: 3px 6px;
+    margin-right: 3px;
+    display: inline-block;
+}
+
