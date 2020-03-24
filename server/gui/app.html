@@ -23,7 +23,10 @@
     <script src="/gui/vendors/noty.js"></script>
     <script src="/gui/vendors/readmore.js"></script>
     <script src="/gui/vendors/pulltorefresh.js"></script>
+    <script src="/gui/tools.js"></script>
     <script src="/gui/events.js"></script>
+    <script src="/gui/heartbeats.js"></script>
+    <script src="/gui/main.js"></script>
     <title>watchTower</title>
 </head>
 
@@ -35,15 +38,19 @@
 <div id="content" class="content">
     <div id="login-hook"></div>
     <div id="filter-form-hook"></div>
-    <div id="events-hook"></div>
+    <div id="main-hook"></div>
 </div>
 
 <!-- =============================================== -->
 <script>
     $(document).ready(function () {
-        _main();
+        main();
     });
 </script>
+
+<!-- =============================================== -->
+<!-- =============================================== -->
+<!-- =============================================== -->
 
 <!-- =============================================== -->
 <script id="tpl-login" type="x-tmpl-mustache">
@@ -53,6 +60,10 @@
     </form>
 
 </script>
+
+<!-- =============================================== -->
+<!-- =============================================== -->
+<!-- =============================================== -->
 
 <!-- =============================================== -->
 <script id="tpl-events" type="x-tmpl-mustache">
@@ -98,6 +109,12 @@
     </form>
 
 </script>
+
+<!-- =============================================== -->
+<!-- =============================================== -->
+<!-- =============================================== -->
+
+<!-- =============================================== -->
 
 </body>
 </html>

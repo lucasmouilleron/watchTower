@@ -1,4 +1,5 @@
 server/data
+server/log
 server/config/*
 !server/config/sample.config.json
 !server/config/sample.upstart.conf

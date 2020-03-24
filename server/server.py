@@ -48,8 +48,8 @@ class Server(Thread):
         self._addRoute("/events", self._routeEventList, ["GET"])
         self._addRoute("/pings", self._routePingList, ["GET"])
         self._addRouteRaw("/", self._routeIndex, ["GET"])
-        self._addRouteRaw("/gui", self._routeGUIEventsIndex, ["GET"])
-        self._addRouteRaw("/gui/events", self._routeGUIEventsIndex, ["GET"])
+        self._addRouteRaw("/gui", self._routeGUIAppIndex, ["GET"])
+        self._addRouteRaw("/gui/app", self._routeGUIAppIndex, ["GET"])
         self._addRouteRaw("/gui/<path:path>", self._routeGUI, ["GET"])
 
         # legacy routes
@@ -103,13 +103,13 @@ class Server(Thread):
         return send_from_directory("gui", path)
 
     ###################################################################################
-    def _routeGUIEventsIndex(self):
-        return send_from_directory("gui", "events.html")
+    def _routeGUIAppIndex(self):
+        return send_from_directory("gui", "app.html")
 
     ###################################################################################
     def _routeHello(self):
         if not self._testPassword(request.headers): return {"result": 403}
-        return {"result": 200, "world": h.now(), "eventsPresets": h.dictionnaryDeepGet(h.CONFIG, "eventsPresets", default=[]), "version": h.dictionnaryDeepGet(h.CONFIG, "version", default=0)}
+        return {"result": 200, "world": h.now(), "eventsPresets": h.dictionnaryDeepGet(h.CONFIG, "eventsPresets", default=[]), "version": str(h.dictionnaryDeepGet(h.CONFIG, "version", default="0"))}
 
     ###################################################################################
     def _routeHeartbeatList(self):
