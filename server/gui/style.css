@@ -81,8 +81,8 @@ select {
     padding: 10px 10px;
 }
 
-.body {
-    margin-top:40px;
+#body {
+    margin-top: 40px;
 }
 
 .form {
@@ -101,33 +101,39 @@ select {
 
 /**************************************************************************/
 /**************************************************************************/
-.menu {
-    position:fixed;
-    top:10px;
-    left:10px;
-    width:100%;
+#menu {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    width: 100%;
 }
 
-.menu .items {
+#menu .items {
     text-align: left;
 }
 
-.menu .item {
+#menu .item {
     cursor: pointer;
     display: inline-block;
-    background-color: #000;
-    color:#fff;
+    background-color: #777;
+    color: #fff;
     border-radius: 5px;
     padding: 3px 6px;
     opacity: 0.8;
 }
 
-.menu .item:hover {
+#menu .item:hover {
     opacity: 1;
 }
 
-.menu .item.current {
-    background-color: #777;
+#menu .item.current {
+    background-color: #000;
+}
+
+#menu .item.now, #menu .item.now:hover {
+    background-color: #ccc;
+    cursor: default;
+    opacity: 1;
 }
 
 /**************************************************************************/
@@ -141,12 +147,12 @@ select {
     word-break: break-all;
 }
 
-#events-filter-form-hook .form{
+#events-filter-form-hook .form {
     text-align: left;
 }
 
 .events .details > span {
-    margin: 0 3px;
+    /*margin: 0 3px;*/
 }
 
 .events .details {
@@ -242,7 +248,6 @@ select {
     background-color: #ddd;
     border-radius: 4px;
     padding: 3px 6px;
-    margin-right: 3px;
     display: inline-block;
 }
 

@@ -23,10 +23,10 @@
     <script src="/gui/vendors/noty.js"></script>
     <script src="/gui/vendors/readmore.js"></script>
     <script src="/gui/vendors/pulltorefresh.js"></script>
-    <script src="/gui/tools.js"></script>
-    <script src="/gui/events.js"></script>
-    <script src="/gui/heartbeats.js"></script>
-    <script src="/gui/main.js"></script>
+    <script src="/gui/tools.js?ck=2"></script>
+    <script src="/gui/events.js?ck=2"></script>
+    <script src="/gui/heartbeats.js?ck=2"></script>
+    <script src="/gui/main.js?ck=2"></script>
     <title>watchTower</title>
 </head>
 
@@ -37,14 +37,14 @@
 <div id="loading"><i class="fa fa-circle-notch fa-spin"></i></div>
 
 <div id="content" class="content">
-    <div class="menu">
+    <div id="menu" style="display: none">
         <div class="items">
             <div class="item events">Events</div>
             <div class="item heartbeats">Heartbeats</div>
             <div class="item now">-</div>
         </div>
     </div>
-    <div class="body">
+    <div id="body">
         <div id="login-hook"></div>
         <div id="main-hook"></div>
     </div>
@@ -93,9 +93,7 @@
     {{#hasEvents}}
         {{#events}}
             <div class="event" data-color="{{color}}">
-                <div class="details">
-                    <span class="service">{{service}}</span> <!--<span class="level">{{level}}</span>--> <span class="date {{dateClass}}">{{date}}</span>
-                </div>
+                <div class="details"><span class="date {{dateClass}}">{{date}}</span> <span class="service">{{service}}</span></div>
                 <div class="message">{{message}}</div>
             </div>
         {{/events}}
@@ -147,8 +145,8 @@
     <div class="heartbeats">
         {{#items}}
             <div class="heartbeat item" data-color="{{color}}">
-                <div class="details"><span class="service">{{service}}</span> <span class="date {{dateClass}}">{{lastDate}}</span></div>
-                <div><span class="params">{{type}}</span><span class="params">{{params}}</span></div>
+                <div class="details"><span class="date {{dateClass}}">{{lastDate}}</span> <span class="service">{{service}}</span></div>
+                <div><span class="params">{{type}}</span> <span class="params">{{params}}</span></div>
             </div>
         {{/items}}
     </div>

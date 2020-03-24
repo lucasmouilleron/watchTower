@@ -4,7 +4,7 @@ function heartbeats() {
 
     PullToRefresh.destroyAll();
     PullToRefresh.init({
-        mainElement: "#content",
+        mainElement: "#body",
         onRefresh: function () {
             updateHeartbeats();
         }

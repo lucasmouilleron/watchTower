@@ -55,24 +55,25 @@ function _hello(password) {
 function setupMenu() {
 
     setInterval(function () {
-        $(".menu .now").html(moment.unix(nowInSecs()).format("YYYY-MM-DD @ HH:mm:ss"));
+        $("#menu .now").html(moment.unix(nowInSecs()).format("YYYY-MM-DD @ HH:mm:ss"));
     }, 1000);
 
 
-    $(".menu .events").click(function (e) {
+    $("#menu .events").click(function (e) {
         e.preventDefault();
-        $(".menu .item").removeClass("current");
+        $("#menu .item").removeClass("current");
         $(this).addClass("current");
         events(EVENTS_PRESETS);
 
     });
-    $(".menu .heartbeats").click(function (e) {
+    $("#menu .heartbeats").click(function (e) {
         e.preventDefault();
-        $(".menu .item").removeClass("current");
+        $("#menu .item").removeClass("current");
         $(this).addClass("current");
         heartbeats();
     });
-    $(".menu .events").click();
+    $("#menu").show();
+    $("#menu .events").click();
 }
 
 /////////////////////////////////////////////////////////
