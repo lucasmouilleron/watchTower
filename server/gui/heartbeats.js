@@ -4,7 +4,10 @@ function heartbeats() {
 
     PullToRefresh.destroyAll();
     PullToRefresh.init({
-        mainElement: "#body",
+        mainElement: "#content",
+        distThreshold: 80,
+        distMax: 100,
+        distReload: 100,
         onRefresh: function () {
             updateHeartbeats();
         }
@@ -33,7 +36,7 @@ function updateHeartbeats() {
             var last = heartbeats[i].last;
             var lastDate = moment.unix(last).format("YYYY-MM-DD @ HH:mm:ss");
             var service = heartbeats[i].service;
-            var params = "frequency: {} - url: {}".format(heartbeats[i].nextIn);
+            var params = "frequency: {}".format(heartbeats[i].nextIn);
             items.push({type: "heartbeat", color: color, ok: ok, dateClass: dateClass, lastDate: lastDate, service: service, params: params, last: last});
         }
 

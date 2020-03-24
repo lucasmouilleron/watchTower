@@ -82,7 +82,7 @@ select {
 }
 
 #body {
-    margin-top: 40px;
+    padding-top: 40px;
 }
 
 .form {
@@ -104,12 +104,13 @@ select {
 #menu {
     position: fixed;
     top: 10px;
-    left: 10px;
+    left: 0px;
     width: 100%;
+    z-index:99;
 }
 
 #menu .items {
-    text-align: left;
+    text-align: center;
 }
 
 #menu .item {
@@ -145,10 +146,6 @@ select {
     background-color: #fff;
     border-radius: 5px;
     word-break: break-all;
-}
-
-#events-filter-form-hook .form {
-    text-align: left;
 }
 
 .events .details > span {

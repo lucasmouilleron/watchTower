@@ -21,7 +21,10 @@ function events(eventsPresets) {
     $(".event .message").readmore("destroy");
     PullToRefresh.destroyAll();
     PullToRefresh.init({
-        mainElement: "#body",
+        mainElement: "#content",
+        distThreshold: 80,
+        distMax: 100,
+        distReload: 100,
         onRefresh: function () {
             updateEvents();
         }
