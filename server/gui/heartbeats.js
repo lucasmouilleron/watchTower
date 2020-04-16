@@ -47,8 +47,12 @@ function updateHeartbeats() {
             var last = pings[i].lastPingSuccess;
             var lastDate = moment.unix(last).format("YYYY-MM-DD @ HH:mm:ss");
             var service = pings[i].service;
-            var params = "frequency: {} - url: {}".format(pings[i].frequency, pings[i].url);
-            items.push({type: "ping", color: color, ok: ok, dateClass: dateClass, lastDate: lastDate, service: service, params: params, last: last});
+            var params = {"frequency": pings[i].frequency, "url": pings[i].url};
+            if (pings[i].proxyURL !== null) params["proxyURL"] = pings[i].proxyURL;
+            var paramss = [];
+            for (var k in params) paramss.push(["{}: {}".format(k, params[k])]);
+            paramss = paramss.join(" - ");
+            items.push({type: "ping", color: color, ok: ok, dateClass: dateClass, lastDate: lastDate, service: service, params: paramss, last: last});
         }
         items.sort(function (a, b) {
             if (a.ok === b.ok) return a.lastDate - b.lastDate;
