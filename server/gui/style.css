@@ -214,12 +214,12 @@ select {
     word-break: break-all;
 }
 
-.heartbeats .details .date, .heartbeats .details .service {
+.heartbeats .details .date, .heartbeats .details .service ,.heartbeats .params{
     background-color: #ddd;
     padding: 3px 6px;
     border-radius: 4px;
-    white-space: nowrap;
-    margin-bottom: 7px;
+    /*white-space: nowrap;*/
+    margin: 3px 0;
     display: inline-block;
 }
 
@@ -242,9 +242,5 @@ select {
 
 .heartbeats .params {
     font-size: 0.9em;
-    background-color: #ddd;
-    border-radius: 4px;
-    padding: 3px 6px;
-    display: inline-block;
 }
 
