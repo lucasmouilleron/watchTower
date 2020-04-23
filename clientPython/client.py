@@ -3,6 +3,7 @@
 ################################################################################
 import requests
 import threading
+import time
 import urllib3
 from urllib3.exceptions import InsecureRequestWarning
 
@@ -68,3 +69,41 @@ class client:
             content = self._processResult(requests.get("%s:%s/events" % (self.url, self.port), params=params, headers={"password": self.password}, verify=False, timeout=self.timeout))
             return content.get("events", [])
         except Exception as e: raise Exception("Can't list events", str(e))
+
+
+################################################################################
+################################################################################
+################################################################################
+class HearbeatManager(threading.Thread):
+
+    ################################################################################
+    def __init__(self, service, url, port, password, alertType, alertTarget, freqInSeconds):
+        threading.Thread.__init__(self)
+        self._interrupt = False
+        self._exitEvent = threading.Event()
+        self.freqInSeconds = freqInSeconds
+        self.alertType = alertType
+        self.alertTarget = alertTarget
+        self.client = client(url, port, password)
+        self.service = service
+        self.lastSent = 0
+
+    ################################################################################
+    def run(self):
+        while not self._interrupt and not self._exitEvent.isSet():
+            try:
+                now = int(time.time())
+                if self.lastSent < now - self.freqInSeconds / 2:
+                    self.client.pulse(self.service, self.alertType, self.alertTarget, self.freqInSeconds)
+                    self.lastSent = now
+            except: print("Can't HB pulse service", self.service)
+            finally: self._exitEvent.wait(5)
+
+        print("HBManager thread finished")
+        self.client.cancel(self.service)
+
+    ################################################################################
+    def interrupt(self):
+        self.client.cancel(self.service)
+        self._interrupt = True
+        self._exitEvent.set()
