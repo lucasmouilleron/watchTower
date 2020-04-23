@@ -90,6 +90,7 @@ class HearbeatManager(threading.Thread):
 
     ################################################################################
     def run(self):
+        print("Hearbeat manager started")
         while not self._interrupt and not self._exitEvent.isSet():
             try:
                 now = int(time.time())
@@ -99,7 +100,7 @@ class HearbeatManager(threading.Thread):
             except: print("Can't HB pulse service", self.service)
             finally: self._exitEvent.wait(5)
 
-        print("HBManager thread finished")
+        print("Hearbeat manager stoped")
         self.client.cancel(self.service)
 
     ################################################################################
