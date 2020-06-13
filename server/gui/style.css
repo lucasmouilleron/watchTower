@@ -227,6 +227,10 @@ select {
     color: #fff;
 }
 
+.heartbeats .details .date.cancelled {
+    background-color: #aaa;
+}
+
 .heartbeats .details .date.on-time {
     background-color: #28a745;
 }

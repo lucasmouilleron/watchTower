@@ -31,13 +31,16 @@ function updateHeartbeats() {
 
         for (var i = 0; i < heartbeats.length; i++) {
             var color = intToRGB(hashCode(heartbeats[i].service.toUpperCase()));
+            var cancelled = heartbeats[i].cancelled;
             var ok = nowInSecs() < heartbeats[i].last + heartbeats[i].nextIn;
-            var dateClass = ok ? "on-time" : "late";
+            if (cancelled) {var dateClass = "cancelled";} else {var dateClass = ok ? "on-time" : "late";}
             var last = heartbeats[i].last;
             var lastDate = moment.unix(last).format("YYYY-MM-DD @ HH:mm:ss");
             var service = heartbeats[i].service;
             var params = "frequency: {}".format(heartbeats[i].nextIn);
-            items.push({type: "heartbeat", color: color, ok: ok, dateClass: dateClass, lastDate: lastDate, service: service, params: params, last: last});
+            var status = 0;
+            if (!ok) {status = 3;} else if (cancelled) { status = 1;} else if (ok) { status = 2;}
+            items.push({type: "heartbeat", status: status, color: color, ok: ok, dateClass: dateClass, lastDate: lastDate, service: service, params: params, last: last});
         }
 
         for (var i = 0; i < pings.length; i++) {
@@ -49,14 +52,15 @@ function updateHeartbeats() {
             var service = pings[i].service;
             var params = {"frequency": pings[i].frequency, "url": pings[i].url};
             if (pings[i].proxyURL !== null) params["proxyURL"] = pings[i].proxyURL;
+            if (!ok) {status = 3;} else if (ok) { status = 2;}
             var paramss = [];
             for (var k in params) paramss.push(["{}: {}".format(k, params[k])]);
             paramss = paramss.join(" - ");
-            items.push({type: "ping", color: color, ok: ok, dateClass: dateClass, lastDate: lastDate, service: service, params: paramss, last: last});
+            items.push({type: "ping", color: color, status: status, ok: ok, dateClass: dateClass, lastDate: lastDate, service: service, params: paramss, last: last});
         }
         items.sort(function (a, b) {
-            if (a.ok === b.ok) return a.lastDate - b.lastDate;
-            return a.ok - b.ok;
+            if (a.status === b.status) return a.lastDate - b.lastDate;
+            return a.status - b.status;
         });
         success("{} items loaded".format(items.length));
         $("#main-hook").html(renderTemplate("tpl-heartbeats", {"items": items, "now": now}));
