@@ -41,14 +41,16 @@ class client:
         except Exception as e: raise Exception("Can't pulse service", str(e))
 
     ###################################################################################
-    def add(self, service, message, level=0, inThread=False):
+    def add(self, service, message, level=0, inThread=False, throwsException=False):
         def doSend():
             self._processResult(requests.post("%s:%s/event" % (self.url, self.port), json={"service": service, "level": level, "message": message}, headers={"password": self.password}, verify=False, timeout=self.timeout))
 
         try:
             if inThread: threading.Thread(target=doSend, args=[]).start()
             else: doSend()
-        except Exception as e: raise Exception("Can't send event", str(e))
+        except Exception as e:
+            if throwsException: raise Exception("Can't send event", str(e))
+            else: print(("Can't send event", str(e)))
 
     ###################################################################################
     def heartbeats(self):

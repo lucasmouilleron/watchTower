@@ -63,7 +63,7 @@ public class client
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
-    private String doSendEvent(String service, String message, int level) throws Exception
+    private String doSendEvent(String service, String message, int level)
     {
         try
         {
@@ -89,7 +89,7 @@ public class client
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////
-    public String add(final String service, final String message, int level, boolean inThread) throws Exception
+    public String add(final String service, final String message, int level, boolean inThread)
     {
         if(!inThread)
         {
