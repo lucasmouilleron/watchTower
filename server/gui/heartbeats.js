@@ -39,7 +39,7 @@ function updateHeartbeats() {
             var service = heartbeats[i].service;
             var params = "frequency: {}".format(heartbeats[i].nextIn);
             var status = 0;
-            if (!ok) {status = 3;} else if (cancelled) { status = 1;} else if (ok) { status = 2;}
+            if (cancelled) { status = 1;} else if (!ok) {status = 3;} else if (ok) { status = 2;}
             items.push({type: "heartbeat", status: status, color: color, ok: ok, dateClass: dateClass, lastDate: lastDate, service: service, params: params, last: last});
         }
 
