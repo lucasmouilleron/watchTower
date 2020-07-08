@@ -54,8 +54,9 @@ Server
     - `config/config.json`: main config (`cp config/sample.json config/config.json`)
     - `config/server.crt`, `config/server.key`: SSL certificate, used only if SSL activated
 - Datas: `data`
-- Deploy: 
-    - Install dependencies
+- Deploy:
+    - Optionnaly define pyenv-virtualenv: `pyenv virtualenv -f 3.6.8 watchTower` 
+    - Install dependencies: `pip install --upgrade pip ; pip install -r requirements.txt`
     - Setup config
     - Generate ssl certificates (optional)
     - Hook in with upstart (optional, `./server/config/sample.upstart.conf`, http://upstart.ubuntu.com/getting-started.html)
